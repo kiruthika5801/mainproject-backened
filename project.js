@@ -343,8 +343,6 @@ app.get('/dashboard-summary', async (req, res) => {
   }
 });
 
-
-
 // Admin Login API
 app.post('/admin-login', async (req, res) => {
   const { username, password } = req.body;
