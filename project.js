@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
   city: String,
   state: String,
   country: String,
-});
+}, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
 
@@ -64,6 +64,7 @@ const orderSchema = new mongoose.Schema({
 });
 
 const Order = mongoose.model('Order', orderSchema);
+
 
 
 // Registration API
@@ -204,7 +205,7 @@ app.get('/get-order-summary/:userId', async (req, res) => {
 // Get all users
 app.get('/get-users', async (req, res) => {
     try {
-        const users = await User.find();  // Fetch all users
+        const users = await User.find().sort({ createdAt: -1 });  // Fetch all users
         res.status(200).json({ users });
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -271,6 +272,18 @@ app.post('/add-product', upload.single('image'), async (req, res) => {
     res.status(500).json({ error: 'Failed to add product', details: error.message });
   }
 });
+
+// Express.js route
+app.delete('/delete-user/:id', async (req, res) => {
+  try {
+      const deletedUser = await User.findByIdAndDelete(req.params.id);
+      if (!deletedUser) return res.status(404).json({ error: "User not found" });
+      res.json({ message: "User deleted successfully" });
+  } catch (err) {
+      res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 
 
